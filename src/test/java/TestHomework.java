@@ -15,12 +15,12 @@ public class TestHomework {
     private final By MAIN_STORY_COMMENTS_ICON = By.xpath(".//div[1]/div/div[1]/div[1]/div/a[6]/span [@class= 'article-share__image-container social-button']");
     //private final By MAIN_HEADING = By.xpath(".//article/div/a[1]/span [@class= 'list-article__headline']");
 
-    /*
-        private final By HEADINGS = By.className("list-article__headline");
-        private final By COMMENTS_COUNT = By.className("list-article__comment section-font-color");
-        private final By LOGO = By.className("flex header-logo flex--align-items-center");
-        private final By LANG_BTN_RUS = By.xpath("//div[3]/div[1]/div[5]/a [@class ='menu-item']");
-     */
+    /* 3rd homework
+    private final By HEADINGS = By.className("list-article__headline");
+    private final By COMMENTS_COUNT = By.className("list-article__comment section-font-color");
+    private final By LOGO = By.className("flex header-logo flex--align-items-center");
+    private final By LANG_BTN_RUS = By.xpath("//div[3]/div[1]/div[5]/a [@class ='menu-item']");
+    */
 
     @Test
     public void testHomeworkOne() {
@@ -88,6 +88,7 @@ public class TestHomework {
                 System.out.print(" (0)");
             }
             System.out.println();
+            //Comment for GIT
         }
     }
 }
