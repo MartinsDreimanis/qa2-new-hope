@@ -88,7 +88,7 @@ public class TestHomework {
                 System.out.print(" (0)");
             }
             System.out.println();
-            //Comment for GIT
+            //Comment for GI
         }
     }
 }
