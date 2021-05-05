@@ -19,7 +19,7 @@ public class TestHomework {
     //private final By HEADINGS = By.className("list-article__headline");
     private final By COMMENTS_COUNT = By.className("list-article__comment section-font-color");
     private final By LOGO = By.className("flex header-logo flex--align-items-center");
-    private final By LANG_BTN_RUS = By.xpath("//div[3]/div[1]/div[5]/a [@class ='menu-item']");
+    private final By LANG_BTN_RUS = By.xpath(".//div[5]/a [@class ='menu-item']");
                                                             //idk if using absolute is good(probably not), but it doesn't appear to change, and I'm too dum do it in another way
 
     @Test
