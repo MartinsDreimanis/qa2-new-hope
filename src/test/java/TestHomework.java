@@ -12,8 +12,8 @@ import java.util.List;
 public class TestHomework {
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
     private final By HEADINGS = By.className("list-article__headline");
-    private final By MAIN_STORY_COMMENTS_ICON = By.xpath(".//div[1]/div/div[1]/div[1]/div/a[6]/span [@class= 'article-share__image-container social-button']");
-    //private final By MAIN_HEADING = By.xpath(".//article/div/a[1]/span [@class= 'list-article__headline']"); an attempt at doing "specific" instead of doing "first-in-line"
+    private final By STORY_COMMENTS_BTN = By.xpath(".//a[6]/span [@class= 'article-share__image-container social-button']");
+    //private final By STORY_COMMENTS_BTN = By.className("article-share__item article-share__item--comments article-share__item-with-count");
 
     // 3rd homework
     //private final By HEADINGS = By.className("list-article__headline");
@@ -27,7 +27,7 @@ public class TestHomework {
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
         WebDriver browserWindow = new ChromeDriver();
         browserWindow.manage().window().maximize();
-        browserWindow.get("http://tvnet.lv");
+        browserWindow.get("https://tvnet.lv");
 
         //Accept cookies
         WebDriverWait wait = new WebDriverWait(browserWindow, 10, 1000);
@@ -37,7 +37,7 @@ public class TestHomework {
         //Interact with main headline
         browserWindow.findElement(HEADINGS).click();
         //Move to comments section
-        browserWindow.findElement(MAIN_STORY_COMMENTS_ICON).click();
+        browserWindow.findElement(STORY_COMMENTS_BTN).click();
     }
 
     @Test
