@@ -12,6 +12,7 @@ import java.util.List;
 public class TestHomework {
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
     private final By HEADINGS = By.className("list-article__headline");
+    private final By HEADINGS_WITH_COMMENTS = By.xpath(".//span [contains (@class, 'list-article__headline')]/span");
     private final By STORY_COMMENTS_BTN = By.xpath(".//a[6]/span [@class= 'article-share__image-container social-button']");
     //private final By STORY_COMMENTS_BTN = By.className("article-share__item article-share__item--comments article-share__item-with-count");
 
@@ -20,41 +21,40 @@ public class TestHomework {
     private final By COMMENTS_COUNT = By.className("list-article__comment section-font-color");
     private final By LOGO = By.className("flex header-logo flex--align-items-center");
     private final By LANG_BTN_RUS = By.xpath(".//div[5]/a [@class ='menu-item']");
-                                                            //idk if using absolute is good(probably not), but it doesn't appear to change, and I'm too dum do it in another way
 
     @Test
     public void testHomeworkOne() {
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
-        WebDriver browserWindow = new ChromeDriver();
-        browserWindow.manage().window().maximize();
-        browserWindow.get("https://tvnet.lv");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://tvnet.lv");
 
         //Accept cookies
-        WebDriverWait wait = new WebDriverWait(browserWindow, 10, 1000);
+        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
-        browserWindow.findElement(ACCEPT_COOKIES_BTN).click();
+        driver.findElement(ACCEPT_COOKIES_BTN).click();
 
         //Interact with main headline
-        browserWindow.findElement(HEADINGS).click();
+        driver.findElement(HEADINGS).click();
         //Move to comments section
-        browserWindow.findElement(STORY_COMMENTS_BTN).click();
+        driver.findElement(STORY_COMMENTS_BTN).click();
     }
 
     @Test
     public void testHomeworkTwo() {
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
-        WebDriver browserWindow = new ChromeDriver();
-        browserWindow.manage().window().maximize();
-        browserWindow.get("http://tvnet.lv");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("http://tvnet.lv");
 
         //Accept cookies
-        WebDriverWait wait = new WebDriverWait(browserWindow, 10, 1000);
+        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
-        browserWindow.findElement(ACCEPT_COOKIES_BTN).click();
+        driver.findElement(ACCEPT_COOKIES_BTN).click();
 
         //print text of the element
-        //String text = browserWindow.findElement(HEADINGS).getText();
-        System.out.println("Main headline title is: " + browserWindow.findElement(HEADINGS).getText());
+        //String text = driver.findElement(HEADINGS).getText();
+        System.out.println("Main headline title is: " + driver.findElement(HEADINGS).getText());
     }
 
     @Test
@@ -65,18 +65,18 @@ public class TestHomework {
     @Test
     public void testHomeworkFour() {
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
-        WebDriver browserWindow = new ChromeDriver();
-        browserWindow.manage().window().maximize();
-        browserWindow.get("http://tvnet.lv");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("http://tvnet.lv");
 
         //Accept cookies
-        WebDriverWait wait = new WebDriverWait(browserWindow, 10, 1000);
+        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
-        browserWindow.findElement(ACCEPT_COOKIES_BTN).click();
+        driver.findElement(ACCEPT_COOKIES_BTN).click();
 
         //list all headings
-        List<WebElement> headingList = browserWindow.findElements(HEADINGS);
-
+        List<WebElement> headingList = driver.findElements(HEADINGS);
+        /*
         //print all headings
         for (int i = 0; i < headingList.size(); i++) {
             String headingText = headingList.get(i).getText() ;
@@ -87,7 +87,29 @@ public class TestHomework {
                 System.out.print(" (0)");
             }
             System.out.println();
-        }
+        }*/
+                        // PRINT WITHOUT COMMENTS
+        for (int i = 0; i < headingList.size(); i++) {
+            String headingText = headingList.get(i).getText() ;
+            Boolean childIsPresent = headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;
+
+            if (childIsPresent == true) {                                                             //check if comments exist
+                WebElement childElement = headingList.get(i).findElement(By.xpath(".//span [contains (@class, 'list-article__comment')]"));
+                String childContent = childElement.getText();
+                StringBuilder sb = new StringBuilder(headingText);
+                sb.setLength (sb.length() - childContent.length());
+                System.out.println(sb);
+
+            } else {                                                                                   //if no comments - print as is
+                System.out.println(headingText);
+            }
+            }
+
+    }
+
+    @Test
+    public void testHomeworkFive()  {
+
     }
 }
 
