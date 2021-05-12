@@ -30,15 +30,12 @@ public class TestHomework {
         driver.manage().window().maximize();
         driver.get("https://tvnet.lv");
 
-        //Accept cookies
-        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
+        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);                                                               //Accept cookies
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
         driver.findElement(ACCEPT_COOKIES_BTN).click();
 
-        //Interact with main headline
-        driver.findElement(HEADINGS).click();
-        //Move to comments section
-        driver.findElement(STORY_COMMENTS_BTN).click();
+        driver.findElement(HEADINGS).click();                                                                                                            //Interact with main headline
+        driver.findElement(STORY_COMMENTS_BTN).click();                                                                                                  //Move to comments section
     }
 
     @Test
@@ -48,14 +45,13 @@ public class TestHomework {
         driver.manage().window().maximize();
         driver.get("http://tvnet.lv");
 
-        //Accept cookies
-        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
+
+        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);                                                               //Accept cookies
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
         driver.findElement(ACCEPT_COOKIES_BTN).click();
 
-        //print text of the element
-        //String text = driver.findElement(HEADINGS).getText();
-        System.out.println("Main headline title is: " + driver.findElement(HEADINGS).getText());
+        //String text = driver.findElement(HEADINGS).getText();                                                                                          //print text contained by the element v1
+        System.out.println("Main headline title is: " + driver.findElement(HEADINGS).getText());                                                         //print text contained by the element v2
     }
 
     @Test
@@ -70,13 +66,10 @@ public class TestHomework {
         driver.manage().window().maximize();
         driver.get("http://tvnet.lv");
 
-        //Accept cookies
-        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
+        WebDriverWait wait = new WebDriverWait(driver, 10, 1000);                                                                //Accept cookies
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
         driver.findElement(ACCEPT_COOKIES_BTN).click();
-
-        //list all headings
-        List<WebElement> headingList = driver.findElements(HEADINGS);
+        List<WebElement> headingList = driver.findElements(HEADINGS);                                                                                    //gather(list) all headings
 
         /*
         //----------------- PRINT WITH COMMENTS (plain) ------------------
@@ -88,44 +81,41 @@ public class TestHomework {
                 System.out.print(" (0)");
             }
             System.out.println();
-        }
-        */
-        /*
-        //---------------- PRINT WITHOUT COMMENTS ----------------
+        }*/
+        /*//---------------- PRINT WITHOUT COMMENTS ----------------
         for (int i = 0; i < headingList.size(); i++) {
             String headingText = headingList.get(i).getText() ;
-            Boolean childIsPresent = headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;      //boolean for checking if heading has comments
 
-            if (childIsPresent) {
+            if (headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).isEmpty) {
+                System.out.println(headingText);                                                                                                        //if no comments - print as is
+            } else {
                 WebElement childElement = headingList.get(i).findElement(By.xpath(".//span [contains (@class, 'list-article__comment')]"));             //check if comments exist
                 String childContent = childElement.getText();                                                                                           //get content of the current child (comments number)
                 StringBuilder sb = new StringBuilder(headingText);
                 sb.setLength (sb.length() - childContent.length());                                                                                     //cut off comments
                 System.out.println(sb);
-            } else {
-                System.out.println(headingText);                                                                                                        //if no comments - print as is
             }
             }
-           */
-        //---------------- PRINT WITH COMMENTS (formated)----------------
-        for (int i = 0; i < headingList.size(); i++) {
-            String headingText = headingList.get(i).getText() ;
-            Boolean childIsPresent = headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;      //boolean for checking if heading has comments
 
-            if (childIsPresent) {
+        *///---------------- PRINT WITH COMMENTS (formated)----------------
+        for (int i = 0; i < headingList.size(); i++) {
+            String headingText = headingList.get(i).getText();                                                                                          //get text contained inside current element
+            //Boolean childIsPresent = headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;    //boolean for checking if heading has comments (got integrated in to if, leaving for reference)
+
+            if (headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).isEmpty()) {
+                System.out.println("Heading: \"" + headingText + "\" has no comments!");                                                                //if no comments - print as is
+            } else {
                 WebElement childElement = headingList.get(i).findElement(By.xpath(".//span [contains (@class, 'list-article__comment')]"));             //check if comments exist
-                String childContent = childElement.getText();                                                                                           //get content of the current child (comments number)
+                String childContent = childElement.getText();                                                                                           //"single out" the count of comments and brackets
                 StringBuilder sb = new StringBuilder(headingText);
                 sb.setLength (sb.length() - childContent.length() -1);                                                                                  //cut off comments and the space before comments
                 System.out.println("Heading: \"" + sb + "\" has " + childContent.replace("(", "").replace(")", "") + " comments!");
-            } else {
-                System.out.println("Heading: \"" + headingText + "\" has no comments!");                                                                //if no comments - print as is
             }
         }
     }
 
     @Test
-    public void HomeworkTaskFive()  {
+    public void homeworkTaskFive()  {
 
     }
 }
