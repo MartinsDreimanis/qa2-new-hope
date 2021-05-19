@@ -14,9 +14,10 @@ public class TestHomework {
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
     private final By ARTICLES = By.className("list-article__headline");
     private final By ARTICLE_COMMENTS_BTN = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
+    private final By COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'list-article__comment')]");
+    private final By PRE_ARTICLE_EXC = By.className("list-article__headline--exclamation");
 
     WebDriver driver;
-
     //------------------- METHODS START---------------------------
     public void initiateTestForWebsite(){
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
@@ -29,14 +30,25 @@ public class TestHomework {
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
         driver.findElement(ACCEPT_COOKIES_BTN).click();
     }
-    //------------------- METHODS END ----------------------------
+    public boolean checkIfNoCommentsExist(List<WebElement> list, int index){
+        boolean value = list.get(index).findElements(COMMENTS_COUNT).isEmpty();
+        return value;
+    }
+    public String articleTitleCleanup(List<WebElement> list, int index){
+        String clearExclamation = list.get(index).findElements(PRE_ARTICLE_EXC).isEmpty() ? list.get(index).getText()
+                : list.get(index).getText().substring(list.get(index).findElement(PRE_ARTICLE_EXC).getText().length() +1);
+        String clearComments = checkIfNoCommentsExist(list, index) ? clearExclamation
+                : clearExclamation.substring(0, clearExclamation.length() - list.get(index).findElement(COMMENTS_COUNT).getText().length() -1);
+        return clearComments;
+    }
+    //--------------- METHODS END/TESTS START --------------------
 
     @Test
     public void homeworkTaskOne() {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        driver.findElement(ARTICLES).click();            //Interact with main headline
+        driver.findElement(ARTICLES).click();            //Interact with main article
         driver.findElement(ARTICLE_COMMENTS_BTN).click();  //Move to comments section
     }
 
@@ -45,14 +57,14 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        System.out.println("Main headline title is: " + driver.findElement(ARTICLES).getText());
+        System.out.println("Main article title is: " + driver.findElement(ARTICLES).getText());
     }
 
     @Test
     public void homeworkTaskThree() {
         /*
-        private final By HEADINGS = By.className("list-article__headline");
-        private final By COMMENTS_COUNT = By.className("list-article__comment");
+        private final By ARTICLES = By.className("list-article__headline");
+        private final By ARTICLE_COMMENT_COUNT = By.className("list-article__comment");
         private final By LOGO = By.className("flex header-logo");
         private final By LANG_BTN_RUS = By.xpath(".//div[5]/a [@class ='menu-item']");
         */
@@ -63,27 +75,27 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        List<WebElement> headingList = driver.findElements(ARTICLES);                                                                                    //gather(list) all headings
+        List<WebElement> articleList = driver.findElements(ARTICLES);     //gather(list) all articles
 
         /*
         //----------------- PRINT WITH COMMENTS (plain) ------------------
-        for (int i = 0; i < headingList.size(); i++) {                                                                                                   //print all headings
-            String headingText = headingList.get(i).getText() ;
+        for (int i = 0; i < articleList.size(); i++) {              //print all headings
+            String headingText = articleList.get(i).getText() ;
             System.out.print(headingText);
 
-            if (headingText.charAt(headingText.length() -1) != ')') {                                                                                    //handle strings with no comments
+            if (headingText.charAt(headingText.length() -1) != ')') {    //handle strings with no comments
                 System.out.print(" (0)");
             }
             System.out.println();
         }*/
         /*//---------------- PRINT WITHOUT COMMENTS ----------------
-        for (int i = 0; i < headingList.size(); i++) {
-            String headingText = headingList.get(i).getText() ;
+        for (int i = 0; i < articleList.size(); i++) {
+            String headingText = articleList.get(i).getText() ;
 
-            if (headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).isEmpty) {
+            if (articleList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).isEmpty) {
                 System.out.println(headingText);                                                                                                        //if no comments - print as is
             } else {
-                WebElement childElement = headingList.get(i).findElement(By.xpath(".//span [contains (@class, 'list-article__comment')]"));             //check if comments exist
+                WebElement childElement = articleList.get(i).findElement(By.xpath(".//span [contains (@class, 'list-article__comment')]"));             //check if comments exist
                 String childContent = childElement.getText();                                                                                           //get content of the current child (comments number)
                 StringBuilder sb = new StringBuilder(headingText);
                 sb.setLength (sb.length() - childContent.length());                                                                                     //cut off comments
@@ -91,19 +103,32 @@ public class TestHomework {
             }
             }
 
-        *///---------------- PRINT WITH COMMENTS (formated)----------------
-        for (int i = 0; i < headingList.size(); i++) {
-            String headingText = headingList.get(i).getText();                                                                                          //get text contained inside current element
-            //Boolean childIsPresent = headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;    //boolean for checking if heading has comments (got integrated in to if, leaving for reference)
+        */
+        /*//---------------- PRINT WITH COMMENTS (formated)----------------
+        for (int i = 0; i < articleList.size(); i++) {
+            String headingText = articleList.get(i).getText();                                                                                          //get text contained inside current element
+            //Boolean childIsPresent = articleList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;    //boolean for checking if heading has comments (got integrated in to if, leaving for reference)
 
-            if (headingList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).isEmpty()) {
-                System.out.println("Heading: \"" + headingText + "\" has no comments!");                                                                //if no comments - print as is
+            if (articleList.get(i).findElements(COMMENTS_COUNT).isEmpty()) {
+                System.out.println("Article: \"" + headingText + "\" has no comments!");                                                                //if no comments - print as is
             } else {
-                WebElement childElement = headingList.get(i).findElement(By.xpath(".//span [contains(@class, 'list-article__comment')]"));              //check if comments exist
+                WebElement childElement = articleList.get(i).findElement(By.xpath(".//span [contains(@class, 'list-article__comment')]"));              //check if comments exist
                 String childContent = childElement.getText();                                                                                           //"single out" the count of comments and brackets
                 StringBuilder sb = new StringBuilder(headingText);
                 sb.setLength (sb.length() - childContent.length() -1);                                                                                  //cut off comments and the space before comments
-                System.out.println("Heading: \"" + sb + "\" has " + childContent.replace("(", "").replace(")", "") + " comments!");
+                System.out.println("Article: \"" + sb + "\" has " + childContent.replace("(", "").replace(")", "") + " comments!");
+            }
+        }
+        */
+        for (int i = 0; i < articleList.size(); i++) {
+            String headingText = articleTitleCleanup(articleList, i);
+
+            if (checkIfNoCommentsExist(articleList, i)) {
+                System.out.println("Article: \"" + headingText + "\" has no comments!");
+            }else {
+                WebElement childElement = articleList.get(i).findElement(COMMENTS_COUNT);
+                String childContent = childElement.getText();
+                System.out.println("Article: \"" + headingText + "\" has " + childContent.substring(1, childContent.length() -1) + " comments!");
             }
         }
     }
@@ -112,6 +137,7 @@ public class TestHomework {
     public void homeworkTaskFive()  {
 
     }
+    //--------------------- TESTS END ----------------------------
     @AfterEach
     public void closeBrowser(){
         driver.close();
