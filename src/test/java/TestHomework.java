@@ -62,7 +62,7 @@ public class TestHomework {
 
     @Test
     public void homeworkTaskThree() {
-        /*
+        /*   DOWN HERE FOR ORGANIZATION PURPOSE ONLY!
         private final By ARTICLES = By.className("list-article__headline");
         private final By ARTICLE_COMMENT_COUNT = By.className("list-article__comment");
         private final By LOGO = By.className("flex header-logo");
@@ -72,6 +72,17 @@ public class TestHomework {
 
     @Test
     public void homeworkTaskFour() {
+        initiateTestForWebsite();
+        clickCookiesButton();
+
+        List<WebElement> articleList = driver.findElements(ARTICLES);
+        for (int i = 0; i < articleList.size(); i++) {
+            System.out.println((i+1) + " " + articleTitleCleanup(articleList, i));
+        }
+    }
+
+    @Test
+    public void homeworkTaskFive()  {
         initiateTestForWebsite();
         clickCookiesButton();
 
@@ -89,10 +100,6 @@ public class TestHomework {
                 System.out.println("Article: \"" + headingText + "\" has " + childContent.substring(1, childContent.length() -1) + " comments!");
             }
         }
-    }
-
-    @Test
-    public void homeworkTaskFive()  {
 
     }
     //--------------------- TESTS END ----------------------------
