@@ -77,49 +77,7 @@ public class TestHomework {
 
         List<WebElement> articleList = driver.findElements(ARTICLES);     //gather(list) all articles
 
-        /*
-        //----------------- PRINT WITH COMMENTS (plain) ------------------
-        for (int i = 0; i < articleList.size(); i++) {              //print all headings
-            String headingText = articleList.get(i).getText() ;
-            System.out.print(headingText);
 
-            if (headingText.charAt(headingText.length() -1) != ')') {    //handle strings with no comments
-                System.out.print(" (0)");
-            }
-            System.out.println();
-        }*/
-        /*//---------------- PRINT WITHOUT COMMENTS ----------------
-        for (int i = 0; i < articleList.size(); i++) {
-            String headingText = articleList.get(i).getText() ;
-
-            if (articleList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).isEmpty) {
-                System.out.println(headingText);                                                                                                        //if no comments - print as is
-            } else {
-                WebElement childElement = articleList.get(i).findElement(By.xpath(".//span [contains (@class, 'list-article__comment')]"));             //check if comments exist
-                String childContent = childElement.getText();                                                                                           //get content of the current child (comments number)
-                StringBuilder sb = new StringBuilder(headingText);
-                sb.setLength (sb.length() - childContent.length());                                                                                     //cut off comments
-                System.out.println(sb);
-            }
-            }
-
-        */
-        /*//---------------- PRINT WITH COMMENTS (formated)----------------
-        for (int i = 0; i < articleList.size(); i++) {
-            String headingText = articleList.get(i).getText();                                                                                          //get text contained inside current element
-            //Boolean childIsPresent = articleList.get(i).findElements(By.xpath(".//span [contains (@class, 'list-article__comment')]")).size() > 0;    //boolean for checking if heading has comments (got integrated in to if, leaving for reference)
-
-            if (articleList.get(i).findElements(COMMENTS_COUNT).isEmpty()) {
-                System.out.println("Article: \"" + headingText + "\" has no comments!");                                                                //if no comments - print as is
-            } else {
-                WebElement childElement = articleList.get(i).findElement(By.xpath(".//span [contains(@class, 'list-article__comment')]"));              //check if comments exist
-                String childContent = childElement.getText();                                                                                           //"single out" the count of comments and brackets
-                StringBuilder sb = new StringBuilder(headingText);
-                sb.setLength (sb.length() - childContent.length() -1);                                                                                  //cut off comments and the space before comments
-                System.out.println("Article: \"" + sb + "\" has " + childContent.replace("(", "").replace(")", "") + " comments!");
-            }
-        }
-        */
         for (int i = 0; i < articleList.size(); i++) {
             String headingText = articleTitleCleanup(articleList, i);
 
@@ -143,23 +101,3 @@ public class TestHomework {
         driver.close();
     }
 }
-
-/*  QA2 Homework 1
-  #1:
-        open http://tvnet.lv
-        open first headline                     .//div[1]/div/div[1]/article/div/a[1]/span [@class = 'list-article__headline'] - works by class, how to specify?
-        move to commentary page                 .//div[1]/div/div[1]/div[1]/div/a[6] [@class ='article-share__item article-share__item--comments article-share__item-with-count'] works by class,
-  #2:                                                                                                                                                           xpath doesn't seem to change, still specify w/o absolute?
-        open http://tvnet.lv
-        sysout of the name of the 1st headline  sysout smth smth
-  #3:
-        create and write locators for:
-        1: all headlines                        .// [@class = 'list-article__headline']
-        2: all locators with commentary count   list-article__comment section-font-color
-        3: tvnet logo                           flex header-logo flex--align-items-center
-        4: link for language change to RUS      .//div[3]/div[1]/div[5]/a [@class ='menu-item']
-  #4:
-        sysout all headlines on main page       for...
-                                                sout browserWindow.findElement(HEADINGS).getText()
-                                                + (0) comments ? (the missing 5th)
-*/
