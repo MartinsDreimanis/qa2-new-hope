@@ -11,6 +11,7 @@ import java.util.List;
 
 
 public class TestHomework {
+    private final String WEBSITE_TO_TEST = "http://tvnet.lv";
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
     private final By ARTICLES = By.className("list-article__headline");
     private final By ARTICLE_COMMENTS_BTN = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
@@ -23,7 +24,7 @@ public class TestHomework {
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("http://tvnet.lv");
+        driver.get(WEBSITE_TO_TEST);
     }
     public void clickCookiesButton(){
         WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
@@ -34,13 +35,48 @@ public class TestHomework {
         return element.findElements(locator).isEmpty();
     }
     public String articleTitleCleanup(WebElement element, By exclamationLocator, By commentsLocator){
-        int excEleLength = element.findElement(exclamationLocator).getText().length();
-        int comEleLength = element.findElement(commentsLocator).getText().length();
+        String title;
 
-        String title = checkIfEmpty(element, exclamationLocator) ? element.getText()
-                : element.getText().substring(excEleLength +1);
-        title = checkIfEmpty(element, commentsLocator) ? title
-                : title.substring(0, title.length() - comEleLength -1);
+        if (checkIfEmpty(element, exclamationLocator)){
+            title = element.getText();
+        }else {
+            int exclamationLength = element.findElement(exclamationLocator).getText().length();
+            title = element.getText().substring(exclamationLength + 1);
+        }
+        if (!checkIfEmpty(element, commentsLocator)) {
+            int commentsLength = element.findElement(commentsLocator).getText().length();
+            title = title.substring(0, title.length() - commentsLength -1);
+        }
+        return title;
+    }
+    public String articleTitleCleanup(WebElement element, By locator){    //if only exclamation or comments need to be removed, not both
+        String title = element.getText();
+        String subElementText;
+        int index;
+
+        if(!checkIfEmpty(element, locator)) {       //determine if the element is at the start or the end(elsewhere) of the string
+            subElementText =  element.findElement(locator).getText();
+            index = element.getText().indexOf(subElementText);
+
+            if(index != 0 ) {                            //deal with the element according to index
+                int commentsLength = subElementText.length();               //remove comments
+                title = title.substring(0, title.length() - commentsLength -1);
+            } else {
+                int exclamationLength = subElementText.length();            //remove exclamation
+                title = element.getText().substring(exclamationLength + 1);
+            }
+        }
+//        if (checkIfEmpty(element, locator)){
+//            title = element.getText();
+//        }else {
+//            int exclamationLength = element.findElement(locator).getText().length();
+//            title = element.getText().substring(exclamationLength + 1);
+//        }
+//
+//        if (!checkIfEmpty(element, locator)) {
+//            int commentsLength = element.findElement(locator).getText().length();
+//            title = title.substring(0, title.length() - commentsLength -1);
+//        }
         return title;
     }
     public String getSubElementText(WebElement element, By locator){
@@ -86,7 +122,7 @@ public class TestHomework {
 
         List<WebElement> articleList = driver.findElements(ARTICLES);
         for (WebElement article:articleList) {
-            System.out.println(articleTitleCleanup(article));
+            System.out.println(articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT));
         }
     }
 
@@ -106,9 +142,10 @@ public class TestHomework {
             }else{
                 commentsCount = Integer.parseInt(commentsText.substring(1, commentsText.length() - 1));
             }
-            System.out.println(articleText +" --- " + commentsCount);
+            System.out.println(articleText + " --- " + commentsCount);
         }
     }
+
     @Test
     public void Extra()  {
         initiateTestForWebsite();
@@ -116,7 +153,7 @@ public class TestHomework {
 
         List<WebElement> articleList = driver.findElements(ARTICLES);
         for (WebElement article:articleList) {
-            String articleText = articleTitleCleanup(article);
+            String articleText = articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT);
             int num = 0;
 
             if (checkIfEmpty(article, COMMENTS_COUNT)) {
