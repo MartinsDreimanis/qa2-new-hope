@@ -10,14 +10,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public class TestHomework {
+    WebDriver driver;
     private final String WEBSITE_TO_TEST = "http://tvnet.lv";
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
-    private final By ARTICLES = By.className("list-article__headline");
-    private final By ARTICLE_COMMENTS_BTN = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
-    private final By COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'list-article__comment')]");
-    private final By ARTICLE_EXCLAMATION = By.className("list-article__headline--exclamation");
+    //"MP" short for "MAIN PAGE"
+    private final By MP_ARTICLES = By.className("list-article__headline");
+    private final By MP_COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'list-article__comment')]");
+    private final By MP_ARTICLE_EXCLAMATION = By.className("list-article__headline--exclamation");
+    //"AP" short for "ARTICLE PAGE"
+    private final By AP_COMMENTS_BTN = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
 
-    WebDriver driver;
     //------------------- METHODS START---------------------------
     public void initiateTestForWebsite(){
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
@@ -84,8 +86,8 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        driver.findElement(ARTICLES).click();            //Interact with main article
-        driver.findElement(ARTICLE_COMMENTS_BTN).click();  //Move to comments section
+        driver.findElement(MP_ARTICLES).click();
+        driver.findElement(AP_COMMENTS_BTN).click();
     }
 
     @Test
@@ -93,7 +95,7 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        System.out.println("Main article title is: " + driver.findElement(ARTICLES).getText());
+        System.out.println("Main article title is: " + driver.findElement(MP_ARTICLES).getText());
     }
 
     @Test
@@ -111,9 +113,9 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        List<WebElement> articleList = driver.findElements(ARTICLES);
+        List<WebElement> articleList = driver.findElements(MP_ARTICLES);
         for (WebElement article:articleList) {
-            System.out.println(articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT));
+            System.out.println(articleTitleCleanup(article, MP_ARTICLE_EXCLAMATION, MP_COMMENTS_COUNT));
         }
     }
 
@@ -122,34 +124,16 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        List<WebElement> articleList = driver.findElements(ARTICLES);
+        List<WebElement> articleList = driver.findElements(MP_ARTICLES);
         for (WebElement article:articleList) {
-            String articleText = articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT);
-            String commentsText = getSubElementText(article, COMMENTS_COUNT);
+            String articleText = articleTitleCleanup(article, MP_ARTICLE_EXCLAMATION, MP_COMMENTS_COUNT);
+            String commentsText = getSubElementText(article, MP_COMMENTS_COUNT);
             int commentsCount = 0;
 
-            if (checkIfEmpty(article, COMMENTS_COUNT) || commentsText.length() == 0){
+            if (checkIfEmpty(article, MP_COMMENTS_COUNT) || commentsText.length() == 0){
                 System.out.println(articleText + " --- " + commentsCount);
             }else{
                 System.out.println(articleText + " --- " + removeBrackets(commentsText));
-            }
-        }
-    }
-
-    @Test
-    public void Extra()  {
-        initiateTestForWebsite();
-        clickCookiesButton();
-
-        List<WebElement> articleList = driver.findElements(ARTICLES);
-        for (WebElement article:articleList) {
-            String articleText = articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT);
-
-            if (checkIfEmpty(article, COMMENTS_COUNT)) {
-                System.out.println("Article: \"" + articleText + "\" has no comments!");
-            }else {
-                String commentsText = getSubElementText(article, COMMENTS_COUNT);
-                System.out.println("Article: \"" + articleText + "\" has " + removeBrackets(commentsText) + " comments!");
             }
         }
     }
