@@ -67,7 +67,7 @@ public class DelfiArticleCommentsTest {
 
     }
         //-------------------------------- COMMENTS PAGE---------------------------------------
-        //...
+        //... homework
     private int getCommentsCount(By locator) {
         int commentsCount = 0;
 
