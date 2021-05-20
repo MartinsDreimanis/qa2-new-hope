@@ -115,8 +115,6 @@ public class TestHomework {
         clickCookiesButton();
 
         List<WebElement> articleList = driver.findElements(ARTICLES);
-
-
         for (WebElement article:articleList) {
             String articleText = articleTitleCleanup(article);
             int num = 0;
