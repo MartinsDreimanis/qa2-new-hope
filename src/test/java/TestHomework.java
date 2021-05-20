@@ -9,7 +9,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-
 public class TestHomework {
     private final String WEBSITE_TO_TEST = "http://tvnet.lv";
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
@@ -33,6 +32,9 @@ public class TestHomework {
     }
     public boolean checkIfEmpty(WebElement element, By locator){
         return element.findElements(locator).isEmpty();
+    }
+    public int removeBrackets (String text){
+        return Integer.parseInt(text.substring(1, text.length() - 1));
     }
     public String articleTitleCleanup(WebElement element, By exclamationLocator, By commentsLocator){
         String title;
@@ -124,14 +126,13 @@ public class TestHomework {
         for (WebElement article:articleList) {
             String articleText = articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT);
             String commentsText = getSubElementText(article, COMMENTS_COUNT);
-            int commentsCount;
+            int commentsCount = 0;
 
             if (checkIfEmpty(article, COMMENTS_COUNT) || commentsText.length() == 0){
-                commentsCount =  0;
+                System.out.println(articleText + " --- " + commentsCount);
             }else{
-                commentsCount = Integer.parseInt(commentsText.substring(1, commentsText.length() - 1));
+                System.out.println(articleText + " --- " + removeBrackets(commentsText));
             }
-            System.out.println(articleText + " --- " + commentsCount);
         }
     }
 
@@ -143,20 +144,17 @@ public class TestHomework {
         List<WebElement> articleList = driver.findElements(ARTICLES);
         for (WebElement article:articleList) {
             String articleText = articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT);
-            int num = 0;
 
             if (checkIfEmpty(article, COMMENTS_COUNT)) {
-                System.out.println(num + 1 +" Article: \"" + articleText + "\" has no comments!");
+                System.out.println("Article: \"" + articleText + "\" has no comments!");
             }else {
-                String commentsText = article.findElement(COMMENTS_COUNT).getText();
-                System.out.println(num + 1 +" Article: \"" + articleText + "\" has " + commentsText.substring(1, commentsText.length() -1) + " comments!");
+                String commentsText = getSubElementText(article, COMMENTS_COUNT);
+                System.out.println("Article: \"" + articleText + "\" has " + removeBrackets(commentsText) + " comments!");
             }
         }
-
     }
     //--------------------- TESTS END ----------------------------
     @AfterEach
     public void closeBrowser(){ driver.close(); }
 }
-//homework - add more methods
 //homework - add logs
