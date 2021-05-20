@@ -30,16 +30,25 @@ public class TestHomework {
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
         driver.findElement(ACCEPT_COOKIES_BTN).click();
     }
-    public boolean checkIfNoCommentsExist(List<WebElement> list, int index){
-        boolean value = list.get(index).findElements(COMMENTS_COUNT).isEmpty();
-        return value;
+    public boolean checkIfEmpty(WebElement element, By locator){
+        return element.findElements(locator).isEmpty();
     }
-    public String articleTitleCleanup(List<WebElement> list, int index){
-        String clearExclamation = list.get(index).findElements(ARTICLE_EXCLAMATION).isEmpty() ? list.get(index).getText()
-                : list.get(index).getText().substring(list.get(index).findElement(ARTICLE_EXCLAMATION).getText().length() +1);
-        String clearComments = checkIfNoCommentsExist(list, index) ? clearExclamation
-                : clearExclamation.substring(0, clearExclamation.length() - list.get(index).findElement(COMMENTS_COUNT).getText().length() -1);
-        return clearComments;
+    public String articleTitleCleanup(WebElement element, By exclamationLocator, By commentsLocator){
+        int excEleLength = element.findElement(exclamationLocator).getText().length();
+        int comEleLength = element.findElement(commentsLocator).getText().length();
+
+        String title = checkIfEmpty(element, exclamationLocator) ? element.getText()
+                : element.getText().substring(excEleLength +1);
+        title = checkIfEmpty(element, commentsLocator) ? title
+                : title.substring(0, title.length() - comEleLength -1);
+        return title;
+    }
+    public String getSubElementText(WebElement element, By locator){
+        String text = "";
+        if(!checkIfEmpty(element, locator)) {
+           text = element.findElement(locator).getText();
+        }
+        return text;
     }
     //--------------- METHODS END/TESTS START --------------------
 
@@ -76,10 +85,8 @@ public class TestHomework {
         clickCookiesButton();
 
         List<WebElement> articleList = driver.findElements(ARTICLES);
-        for (int i = 0; i < articleList.size(); i++) {
-            System.out.println((i+1) + " " + articleTitleCleanup(articleList, i));
-
-            //System.out.println(articleList.get(110).findElement(COMMENTS_COUNT).getText().isEmpty());
+        for (WebElement article:articleList) {
+            System.out.println(articleTitleCleanup(article));
         }
     }
 
@@ -89,18 +96,18 @@ public class TestHomework {
         clickCookiesButton();
 
         List<WebElement> articleList = driver.findElements(ARTICLES);
+        for (WebElement article:articleList) {
+            String articleText = articleTitleCleanup(article, ARTICLE_EXCLAMATION, COMMENTS_COUNT);
+            String commentsText = getSubElementText(article, COMMENTS_COUNT);
+            int commentsCount;
 
-
-        for (int i = 0; i < articleList.size(); i++) {
-            String articleText = articleTitleCleanup(articleList, i);
-            int commentsCount = 0;
-
-            System.out.print( i + 1 + articleText);
-            commentsCount = checkIfNoCommentsExist(articleList, i) || articleList.get(i).findElement(COMMENTS_COUNT).getText().length() == 0 ? 0
-            :Integer.parseInt(articleList.get(i).findElement(COMMENTS_COUNT).getText().substring(1, articleList.get(i).findElement(COMMENTS_COUNT).getText().length() - 1));
-            System.out.println(" --- " + commentsCount);
+            if (checkIfEmpty(article, COMMENTS_COUNT) || commentsText.length() == 0){
+                commentsCount =  0;
+            }else{
+                commentsCount = Integer.parseInt(commentsText.substring(1, commentsText.length() - 1));
+            }
+            System.out.println(articleText +" --- " + commentsCount);
         }
-
     }
     @Test
     public void Extra()  {
@@ -110,15 +117,15 @@ public class TestHomework {
         List<WebElement> articleList = driver.findElements(ARTICLES);
 
 
-        for (int i = 0; i < articleList.size(); i++) {
-            String articleText = articleTitleCleanup(articleList, i);
+        for (WebElement article:articleList) {
+            String articleText = articleTitleCleanup(article);
+            int num = 0;
 
-            if (checkIfNoCommentsExist(articleList, i)) {
-                System.out.println((i +1) + "Article: \"" + articleText + "\" has no comments!");
+            if (checkIfEmpty(article, COMMENTS_COUNT)) {
+                System.out.println(num + 1 +" Article: \"" + articleText + "\" has no comments!");
             }else {
-                WebElement childElement = articleList.get(i).findElement(COMMENTS_COUNT);
-                String childContent = childElement.getText();
-                System.out.println((i +1) + "Article: \"" + articleText + "\" has " + childContent.substring(1, childContent.length() -1) + " comments!");
+                String commentsText = article.findElement(COMMENTS_COUNT).getText();
+                System.out.println(num + 1 +" Article: \"" + articleText + "\" has " + commentsText.substring(1, commentsText.length() -1) + " comments!");
             }
         }
 
