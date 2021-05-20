@@ -54,29 +54,18 @@ public class TestHomework {
         String subElementText;
         int index;
 
-        if(!checkIfEmpty(element, locator)) {       //determine if the element is at the start or the end(elsewhere) of the string
+        if(!checkIfEmpty(element, locator)) {
             subElementText =  element.findElement(locator).getText();
             index = element.getText().indexOf(subElementText);
 
-            if(index != 0 ) {                            //deal with the element according to index
-                int commentsLength = subElementText.length();               //remove comments
+            if(index != 0 ) {
+                int commentsLength = subElementText.length();
                 title = title.substring(0, title.length() - commentsLength -1);
             } else {
-                int exclamationLength = subElementText.length();            //remove exclamation
+                int exclamationLength = subElementText.length();
                 title = element.getText().substring(exclamationLength + 1);
             }
         }
-//        if (checkIfEmpty(element, locator)){
-//            title = element.getText();
-//        }else {
-//            int exclamationLength = element.findElement(locator).getText().length();
-//            title = element.getText().substring(exclamationLength + 1);
-//        }
-//
-//        if (!checkIfEmpty(element, locator)) {
-//            int commentsLength = element.findElement(locator).getText().length();
-//            title = title.substring(0, title.length() - commentsLength -1);
-//        }
         return title;
     }
     public String getSubElementText(WebElement element, By locator){
