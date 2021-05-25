@@ -57,25 +57,25 @@ public class DelfiArticleCommentsTest {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         jse.executeScript("window.scrollBy(0,250)");
     }
-    private String getCommentsCount(By locator) {
-        String commentsCount = "";
+    private int getCommentsCount(By locator) {
+        int commentsCount = 0;
 
         if (!driver.findElements(locator).isEmpty()) {
             commentsCount = removeBrackets(driver.findElement(locator));
         }
         return commentsCount;
     }
-    private String getCommentsCount(WebElement we, By locator) {
-        String commentsCount = "";
+    private int getCommentsCount(WebElement we, By locator) {
+        int commentsCount = 0;
 
         if (!we.findElements(locator).isEmpty()) {
-            commentsCount = removeBrackets(we.findElement(locator));
+            commentsCount = removeBrackets(driver.findElement(locator));
         }
         return commentsCount;
     }
-    private String removeBrackets(WebElement we) {
+    private int removeBrackets(WebElement we) {
             String text = we.getText();
-            return text.substring(1, text.length() - 1);
+            return Integer.parseInt(text.substring(1, text.length() - 1));
     }
     private String getElementText(By locator){
         return driver.findElement(locator).getText();
@@ -107,9 +107,6 @@ public class DelfiArticleCommentsTest {
 
         return removeSpace(text);
     }
-    private int asInt(String text){
-        return Integer.parseInt(text);
-    }
 
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ METHODS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     @Test
@@ -124,7 +121,7 @@ public class DelfiArticleCommentsTest {
         WebElement article = articles.get(0);
 
         String homePageTitle = clearArticleTitle(article, HOME_PAGE_COMMENTS, HOME_PAGE_SUB_TITLE, HOME_PAGE_LABEL);
-        int homePageCommentsCount = asInt(getCommentsCount(article, HOME_PAGE_COMMENTS));
+        int homePageCommentsCount = getCommentsCount(article, HOME_PAGE_COMMENTS);
 
         article.findElement(HOME_PAGE_TITLE).click();
         //-------------------------------- ARTICLE PAGE ---------------------------------------
@@ -132,7 +129,7 @@ public class DelfiArticleCommentsTest {
         waitToLoad(ARTICLE_PAGE_TITLE);
         waitToLoad(ARTICLE_PAGE_COMMENTS);
         String articlePageTitle = removeSpace(getElementText(ARTICLE_PAGE_TITLE));
-        int articlePageCommentsCount = asInt(getCommentsCount(ARTICLE_PAGE_COMMENTS));
+        int articlePageCommentsCount = getCommentsCount(ARTICLE_PAGE_COMMENTS);
 
         LOGGER.info("Comparing article page to home page...");
         Assertions.assertEquals(homePageTitle, articlePageTitle, "Wrong title!");
@@ -147,7 +144,7 @@ public class DelfiArticleCommentsTest {
         List<WebElement> commentsCount = driver.findElements(COMMENTS_PAGE_COMMENTS);
 
         String commentsPageTitle = getElementText(COMMENTS_PAGE_TITLE);
-        int commentsPageCommentsCount = asInt(removeBrackets(commentsCount.get(0))) + asInt(removeBrackets(commentsCount.get(1)));
+        int commentsPageCommentsCount = removeBrackets(commentsCount.get(0)) + removeBrackets(commentsCount.get(1));
 
         LOGGER.info("Comparing comments page to article page...");
         Assertions.assertEquals(articlePageTitle, commentsPageTitle, "Wrong title!");
