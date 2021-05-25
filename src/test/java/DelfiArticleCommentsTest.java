@@ -89,32 +89,6 @@ public class DelfiArticleCommentsTest {
     private String getElementText(By locator){
         return driver.findElement(locator).getText();
     }
-    private String removeComments(WebElement element, By locator){
-        String text = element.getText();
-
-        if (!element.findElements(locator).isEmpty()) {
-            String comments = getCommentsCountString(element, locator);
-            text = text.substring(0, text.length() - comments.length() -1);
-        }
-        return text;
-    }
-    private String removeSubTitle(WebElement element, By locator){
-        String text = element.getText();
-
-        if(!element.findElements(locator).isEmpty()){
-            String subTitle = element.findElement(locator).getText();
-            text = text.substring(0, text.length() - subTitle.length() -1);
-        }
-        return text;
-    }
-    private String removeLabels(WebElement element, String text, By locator){
-
-        if(!element.findElements(locator).isEmpty()){
-            String label = element.findElement(locator).getText();
-            text = text.substring(label.length() + 1);
-        }
-        return text;
-    }
     private String removeSpace(String text){
         if(text.charAt((text.length() -1)) != ' '){
             return text;
