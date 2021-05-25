@@ -1,3 +1,5 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -13,21 +15,24 @@ public class TestHomework {
     WebDriver driver;
     private final String WEBSITE_TO_TEST = "http://tvnet.lv";
     private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode ='primary']");
-    //"MP" short for "MAIN PAGE"
-    private final By MP_ARTICLES = By.className("list-article__headline");
-    private final By MP_COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'list-article__comment')]");
-    private final By MP_ARTICLE_EXCLAMATION = By.className("list-article__headline--exclamation");
-    //"AP" short for "ARTICLE PAGE"
-    private final By AP_COMMENTS_BTN = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
+    private final Logger LOGGER = LogManager.getLogger(TestHomework.class);
+    //Main Page
+    private final By MAIN_PAGE_ARTICLES = By.className("list-article__headline");
+    private final By MAIN_PAGE_COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'list-article__comment')]");
+    private final By MAIN_PAGE_ARTICLE_EXCLAMATION = By.className("list-article__headline--exclamation");
+    //Article Page
+    private final By ARTICLE_PAGE_COMMENTS_BTN = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
 
     //------------------- METHODS START---------------------------
     public void initiateTestForWebsite(){
+        LOGGER.info("Starting test!");
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(WEBSITE_TO_TEST);
     }
     public void clickCookiesButton(){
+        LOGGER.info("Handling cookies");
         WebDriverWait wait = new WebDriverWait(driver, 10, 1000);
         wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_COOKIES_BTN));
         driver.findElement(ACCEPT_COOKIES_BTN).click();
@@ -86,8 +91,8 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        driver.findElement(MP_ARTICLES).click();
-        driver.findElement(AP_COMMENTS_BTN).click();
+        driver.findElement(MAIN_PAGE_ARTICLES).click();
+        driver.findElement(ARTICLE_PAGE_COMMENTS_BTN).click();
     }
 
     @Test
@@ -95,7 +100,7 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        System.out.println("Main article title is: " + driver.findElement(MP_ARTICLES).getText());
+        System.out.println("Main article title is: " + driver.findElement(MAIN_PAGE_ARTICLES).getText());
     }
 
     @Test
@@ -113,9 +118,9 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        List<WebElement> articleList = driver.findElements(MP_ARTICLES);
+        List<WebElement> articleList = driver.findElements(MAIN_PAGE_ARTICLES);
         for (WebElement article:articleList) {
-            System.out.println(articleTitleCleanup(article, MP_ARTICLE_EXCLAMATION, MP_COMMENTS_COUNT));
+            System.out.println(articleTitleCleanup(article, MAIN_PAGE_ARTICLE_EXCLAMATION, MAIN_PAGE_COMMENTS_COUNT));
         }
     }
 
@@ -124,13 +129,13 @@ public class TestHomework {
         initiateTestForWebsite();
         clickCookiesButton();
 
-        List<WebElement> articleList = driver.findElements(MP_ARTICLES);
+        List<WebElement> articleList = driver.findElements(MAIN_PAGE_ARTICLES);
         for (WebElement article:articleList) {
-            String articleText = articleTitleCleanup(article, MP_ARTICLE_EXCLAMATION, MP_COMMENTS_COUNT);
-            String commentsText = getSubElementText(article, MP_COMMENTS_COUNT);
+            String articleText = articleTitleCleanup(article, MAIN_PAGE_ARTICLE_EXCLAMATION, MAIN_PAGE_COMMENTS_COUNT);
+            String commentsText = getSubElementText(article, MAIN_PAGE_COMMENTS_COUNT);
             int commentsCount = 0;
 
-            if (checkIfEmpty(article, MP_COMMENTS_COUNT) || commentsText.length() == 0){
+            if (checkIfEmpty(article, MAIN_PAGE_COMMENTS_COUNT) || commentsText.length() == 0){
                 System.out.println(articleText + " --- " + commentsCount);
             }else{
                 System.out.println(articleText + " --- " + removeBrackets(commentsText));
@@ -138,7 +143,11 @@ public class TestHomework {
         }
     }
     //--------------------- TESTS END ----------------------------
+
     @AfterEach
-    public void closeBrowser(){ driver.close(); }
+    public void closeBrowser(){
+        LOGGER.info("End of test, closing browser!");
+        driver.close();
+    }
 }
 //homework - add logs
