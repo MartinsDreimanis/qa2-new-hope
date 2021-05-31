@@ -29,4 +29,8 @@ public class CommentsPage {
         public List<WebElement> getComments() {
                 return bf.getElementList(COMMENTS);
         }
+
+        public int addCommentsCount (WebElement element1, WebElement element2) {
+                return bf.removeBrackets(element1) + bf.removeBrackets(element2);
+        }
 }

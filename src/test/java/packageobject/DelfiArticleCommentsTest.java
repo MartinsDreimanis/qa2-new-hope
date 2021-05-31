@@ -2,8 +2,10 @@ package packageobject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import packageobject.pages.ArticlePage;
 import packageobject.pages.BaseFunc;
@@ -14,6 +16,7 @@ import java.util.List;
 
 public class DelfiArticleCommentsTest {
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
+    WebDriver driver;
 
     @Test
     public void titleAndCommentsCountCheck() {
@@ -27,7 +30,7 @@ public class DelfiArticleCommentsTest {
         homePage.waitForElements();
 
         List<WebElement> articles = homePage.getArticles();
-        WebElement article = articles.get(1);
+        WebElement article = articles.get(2);
 
         String homePageTitle = homePage.getCleanArticleTitle(article);
         int homePageCommentsCount = homePage.getCommentsCount(article);
@@ -40,10 +43,7 @@ public class DelfiArticleCommentsTest {
         String articlePageTitle = articlePage.getArticleTitle();
         int articlePageCommentsCount = articlePage.getCommentsCount();
 
-        LOGGER.info("Comparing article page to home page...");
-        Assertions.assertEquals(homePageTitle, articlePageTitle, "Wrong title!");
-        Assertions.assertEquals(homePageCommentsCount, articlePageCommentsCount, "Wrong count!");
-        LOGGER.info("Pass!");
+        baseFunc.assertionTestCompare(homePageTitle, articlePageTitle, homePageCommentsCount, articlePageCommentsCount);
 
         articlePage.clickComments();
         //-------------------------------- COMMENTS PAGE --------------------------------------
@@ -53,17 +53,14 @@ public class DelfiArticleCommentsTest {
         List<WebElement> commentsCount = commentsPage.getComments();
 
         String commentsPageTitle = commentsPage.getCommentsPageTitle();
-        int commentsSum = baseFunc.removeBrackets(commentsCount.get(0)) + baseFunc.removeBrackets(commentsCount.get(1));
+        int commentsSum = commentsPage.addCommentsCount(commentsCount.get(0), commentsCount.get(1));
 
-        LOGGER.info("Comparing comments page to article page...");
-        Assertions.assertEquals(articlePageTitle, commentsPageTitle, "Wrong title!");
-        Assertions.assertEquals(articlePageCommentsCount, commentsSum, "Wrong count!");
-        LOGGER.info("Pass!");
+        baseFunc.assertionTestCompare(articlePageTitle, commentsPageTitle, articlePageCommentsCount, commentsSum);
 
         LOGGER.info("Test finished successfully!");
     }
-//    @AfterEach
-//    public void closeBrowser() {
-//        driver.close();
-//    }
+    @AfterEach
+    public void closeBrowser() {
+        driver.close();
+    }
 }

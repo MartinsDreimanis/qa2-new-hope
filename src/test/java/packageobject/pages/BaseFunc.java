@@ -2,6 +2,7 @@ package packageobject.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -39,44 +40,29 @@ public class BaseFunc {
     }
     //makes sure elements have loaded so the test doesn't choke
     public void waitForElements(By articleNameLocator, By commentsCountLocator){
-        LOGGER.info("Waiting for " + articleNameLocator + " to load...");
+        LOGGER.info("Waiting for related elements to load...");
         waitToLoad(articleNameLocator);
-        LOGGER.info("Element present!");
-        LOGGER.info("Waiting for " + commentsCountLocator + " to load...");
         waitToLoad(commentsCountLocator);
-        LOGGER.info("Element present!");
+        LOGGER.info("Loaded!");
     }
 
     public void click(By locator) {
         LOGGER.info("Clicking on element by: " + locator);
         driver.findElement(locator).click();
     }
+
     public void click(WebElement element, By locator) {
         LOGGER.info("Clicking on element by: " + locator);
         element.findElement(locator).click();
-    }
-
-//    public boolean checkIfEmpty (WebElement element, By locator) {
-//        return element.findElements(locator).isEmpty();
-//    }
-    public boolean isEmpty(By locator) {
-        return driver.findElements(locator).isEmpty();
     }
 
     public int removeBrackets(WebElement element) {
         String text = element.getText();
         return Integer.parseInt(text.substring(1, text.length() - 1));
     }
-    public int removeBrackets(By locator) {
-        String text = getElementText(locator);
-        return Integer.parseInt(text.substring(1, text.length() - 1));
-    }
+
     public int removeBrackets (String text) {
         return Integer.parseInt(text.substring(1, text.length() - 1));
-    }
-
-    public WebElement getElement(By locator) {
-        return driver.findElement(locator);
     }
 
     public String getElementText(By locator){
@@ -94,8 +80,10 @@ public class BaseFunc {
         return text;
     }
 
-    public void closeBrowser() {
-        LOGGER.info("End of test, closing browser!");
-        driver.close();
+    public void assertionTestCompare(String string1, String string2, Integer int1, Integer int2) {
+        LOGGER.info("Comparing page titles and comment counts...");
+        Assertions.assertEquals(string1, string2, "Wrong title!");
+        Assertions.assertEquals(int1, int2, "Wrong count!");
+        LOGGER.info("Pass!");
     }
 }

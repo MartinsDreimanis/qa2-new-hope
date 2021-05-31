@@ -26,8 +26,8 @@ public class ArticlePage {
     public int getCommentsCount() {
         int commentsCount = 0;
 
-        if (!bf.isEmpty(COMMENTS)) {
-            commentsCount = bf.removeBrackets(COMMENTS);
+        if (!bf.driver.findElements(COMMENTS).isEmpty()) {
+            commentsCount = bf.removeBrackets(bf.driver.findElement(COMMENTS).getText());
         }
         return commentsCount;
     }
