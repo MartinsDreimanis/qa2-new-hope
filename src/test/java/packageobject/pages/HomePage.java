@@ -16,16 +16,16 @@ public class HomePage {
     private final By COMMENTS = By.xpath(".//a[contains(@class, 'comment-count')]");
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
-    private BaseFunc bf;
+    private BaseFunc baseFunc;
 
     public HomePage(BaseFunc baseFunc){
-        this.bf = baseFunc;
+        this.baseFunc = baseFunc;
     }
 
     public void acceptCookies(){
         LOGGER.info("Waiting to accept cookies button...");
-        bf.waitToLoad(ACCEPT_COOKIE_BTN);
-        bf.click(ACCEPT_COOKIE_BTN);
+        baseFunc.waitToLoad(ACCEPT_COOKIE_BTN);
+        baseFunc.click(ACCEPT_COOKIE_BTN);
         LOGGER.info("Done!");
 
 //        JavascriptExecutor jse = (JavascriptExecutor)baseFunc.driver;
@@ -33,11 +33,11 @@ public class HomePage {
     }
 
     public void waitForElements(){
-        bf.waitForElements(ARTICLE, COMMENTS);
+        baseFunc.waitForElements(ARTICLE, COMMENTS);
     }
 
     public List<WebElement> getArticles(){
-        return bf.getElementList(ARTICLE);
+        return baseFunc.getElementList(ARTICLE);
     }
 
     public String getCleanArticleTitle(WebElement element) {
@@ -58,18 +58,18 @@ public class HomePage {
             text = text.substring(0, text.length() - subTitle.length() -1);
         }
         //remove last ' ' if present and return
-        return bf.removeSpace(text);
+        return baseFunc.removeSpace(text);
     }
 
     public void clickTitle(WebElement element){
-        bf.click(element, TITLE);
+        baseFunc.click(element, TITLE);
     }
 
     public int getCommentsCount(WebElement element) {
         int commentsCount = 0;
 
         if (!element.findElements(COMMENTS).isEmpty()) {
-            commentsCount = bf.removeBrackets(element.findElement(COMMENTS).getText());
+            commentsCount = baseFunc.removeBrackets(element.findElement(COMMENTS).getText());
         }
         return commentsCount;
     }

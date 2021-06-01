@@ -9,30 +9,30 @@ public class ArticlePage {
     private final By COMMENTS = By.xpath(".//a[contains(@class, 'text-size-md-28')]");
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
-    private BaseFunc bf;
+    private BaseFunc baseFunc;
 
     public ArticlePage (BaseFunc baseFunc) {
-        this.bf = baseFunc;
+        this.baseFunc = baseFunc;
     }
 
     public void waitForElements(){
-        bf.waitForElements(TITLE, COMMENTS);
+        baseFunc.waitForElements(TITLE, COMMENTS);
     }
 
     public String getArticleTitle() {
-        return bf.removeSpace(bf.getElementText(TITLE));
+        return baseFunc.removeSpace(baseFunc.getElementText(TITLE));
     }
 
     public int getCommentsCount() {
         int commentsCount = 0;
 
-        if (!bf.driver.findElements(COMMENTS).isEmpty()) {
-            commentsCount = bf.removeBrackets(bf.driver.findElement(COMMENTS).getText());
+        if (!baseFunc.driver.findElements(COMMENTS).isEmpty()) {
+            commentsCount = baseFunc.removeBrackets(baseFunc.driver.findElement(COMMENTS).getText());
         }
         return commentsCount;
     }
 
     public void clickComments(){
-        bf.click(COMMENTS);
+        baseFunc.click(COMMENTS);
     }
 }

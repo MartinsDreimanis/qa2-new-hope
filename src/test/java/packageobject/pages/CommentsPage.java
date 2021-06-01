@@ -12,25 +12,25 @@ public class CommentsPage {
         private final By COMMENTS = By.xpath(".//span [@class='type-cnt']");
 
         private final Logger LOGGER = LogManager.getLogger(this.getClass());
-        private BaseFunc bf;
+        private BaseFunc baseFunc;
 
         public CommentsPage(BaseFunc baseFunc) {
-                this.bf = baseFunc;
+                this.baseFunc = baseFunc;
         }
 
         public String getCommentsPageTitle() {
-                return bf.getElementText(TITLE);
+                return baseFunc.getElementText(TITLE);
         }
 
         public void waitForElements() {
-                bf.waitForElements(TITLE, COMMENTS);
+                baseFunc.waitForElements(TITLE, COMMENTS);
         }
 
         public List<WebElement> getComments() {
-                return bf.getElementList(COMMENTS);
+                return baseFunc.getElementList(COMMENTS);
         }
 
         public int addCommentsCount (WebElement element1, WebElement element2) {
-                return bf.removeBrackets(element1) + bf.removeBrackets(element2);
+                return baseFunc.removeBrackets(element1) + baseFunc.removeBrackets(element2);
         }
 }
