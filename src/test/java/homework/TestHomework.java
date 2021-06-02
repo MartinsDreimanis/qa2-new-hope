@@ -26,10 +26,7 @@ public class TestHomework {
         home.clickCookiesButton();
 
         home.clickArticle();
-        //-----------------------------------------
-        ArticlePage article = new ArticlePage(base);
-
-        article.clickComments();
+        articlePage.clickComments();
     }
 
     @Test
