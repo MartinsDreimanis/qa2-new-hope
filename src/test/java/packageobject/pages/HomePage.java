@@ -2,76 +2,59 @@ package packageobject.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
 public class HomePage {
-    private final By ACCEPT_COOKIE_BTN = By.xpath(".//button[@mode = 'primary']");
+    private final By COOKIE_BTN = By.xpath(".//button[@mode = 'primary']");
     private final By ARTICLE = By.tagName("article");
     private final By TITLE = By.xpath(".//h1[contains(@class, 'headline__title')]");
-    private final By LABEL = By.xpath(".//div[contains(@class, 'headline__image__label')]");
-    private final By SUB_TITLE = By.xpath(".//h1[contains(@class, 'text-size-14')]");
     private final By COMMENTS = By.xpath(".//a[contains(@class, 'comment-count')]");
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
-    private BaseFunc baseFunc;
+    private BaseFunctions base;
 
-    public HomePage(BaseFunc baseFunc){
-        this.baseFunc = baseFunc;
+    public HomePage(BaseFunctions base){
+        this.base = base;
     }
 
     public void acceptCookies(){
-        LOGGER.info("Waiting to accept cookies button...");
-        baseFunc.waitToLoad(ACCEPT_COOKIE_BTN);
-        baseFunc.click(ACCEPT_COOKIE_BTN);
-        LOGGER.info("Done!");
-
-//        JavascriptExecutor jse = (JavascriptExecutor)baseFunc.driver;
-//        jse.executeScript("window.scrollBy(0,250)");
+        LOGGER.info("Accepting cookies");
+        base.click(COOKIE_BTN);
+        base.scroll(0, 250);
     }
 
-    public void waitForElements(){
-        baseFunc.waitForElements(ARTICLE, COMMENTS);
+    public WebElement getArticleById(int id){
+        LOGGER.info("Getting article Nr." + (id + 1));
+        List<WebElement> articles = base.findElements(ARTICLE);
+
+        Assertions.assertFalse(articles.isEmpty(), "There are no articles");
+        Assertions.assertTrue(articles.size() > id, "Article amount is less than id");
+
+        return base.findElements(ARTICLE).get(id);
     }
 
-    public List<WebElement> getArticles(){
-        return baseFunc.getElementList(ARTICLE);
+    public String getTitle(int id){
+        LOGGER.info("Getting title for article Nr: " + (id +1));
+        return base.getText(getArticleById(id), TITLE);
     }
 
-    public String getCleanArticleTitle(WebElement element) {
-        String text = element.getText();
-        //remove label if present
-        if(!element.findElements(LABEL).isEmpty()){
-            String label = element.findElement(LABEL).getText();
-            text = text.substring(label.length() + 1);
+    public ArticlePage openArticle(int id){
+        LOGGER.info("Opening article Nr. " + (id +1));
+        base.click(getArticleById(id));
+        return new ArticlePage(base);
+    }
+
+    public int getCommentsCount(int id) {
+        LOGGER.info("Getting comments count for article Nr: " + (id +1));
+
+        if(!base.findElements(getArticleById(id), COMMENTS).isEmpty()) {
+            String commentsCountToParse = base.getText(getArticleById(id), COMMENTS);
+            return base.removeBrackets(commentsCountToParse);
         }
-        //remove comments if present
-        if (!element.findElements(COMMENTS).isEmpty()) {
-            String comments = element.findElement(COMMENTS).getText();
-            text = text.substring(0, text.length() - comments.length() -1);
-        }
-        //remove sub-title if present
-        if(!element.findElements(SUB_TITLE).isEmpty()){
-            String subTitle = element.findElement(SUB_TITLE).getText();
-            text = text.substring(0, text.length() - subTitle.length() -1);
-        }
-        //remove last ' ' if present and return
-        return baseFunc.removeSpace(text);
+        return 0;
     }
-
-    public void clickTitle(WebElement element){
-        baseFunc.click(element, TITLE);
-    }
-
-    public int getCommentsCount(WebElement element) {
-        int commentsCount = 0;
-
-        if (!element.findElements(COMMENTS).isEmpty()) {
-            commentsCount = baseFunc.removeBrackets(element.findElement(COMMENTS).getText());
-        }
-        return commentsCount;
-    }
-
 }

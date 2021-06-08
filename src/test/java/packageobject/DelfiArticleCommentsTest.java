@@ -5,62 +5,50 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import packageobject.pages.ArticlePage;
-import packageobject.pages.BaseFunc;
+import packageobject.pages.BaseFunctions;
 import packageobject.pages.CommentsPage;
 import packageobject.pages.HomePage;
 
-import java.util.List;
-
 public class DelfiArticleCommentsTest {
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
-    WebDriver driver;
+    private final int ARTICLE_ID = 1;
+    BaseFunctions base;
 
     @Test
     public void titleAndCommentsCountCheck() {
         LOGGER.info("This test is checking titles and comments count on home/article/comments pages");
-        BaseFunc baseFunc = new BaseFunc();
-        baseFunc.openPage("http://delfi.lv");
+
+        base = new BaseFunctions();
+        base.openPage("http://delfi.lv");
 
         //--------------------------------- HOME PAGE -----------------------------------------
-        HomePage homePage = new HomePage(baseFunc);
-        homePage.acceptCookies();
-        homePage.waitForElements();
+        HomePage home = new HomePage(base);
+        home.acceptCookies();
 
-        List<WebElement> articles = homePage.getArticles();
-        WebElement article = articles.get(2);
+        String homePageTitle = home.getTitle(ARTICLE_ID);
+        int homePageCommentsCount = home.getCommentsCount(ARTICLE_ID);
 
-        String homePageTitle = homePage.getCleanArticleTitle(article);
-        int homePageCommentsCount = homePage.getCommentsCount(article);
+        ArticlePage article = home.openArticle(ARTICLE_ID);
 
-        homePage.clickTitle(article);
         //-------------------------------- ARTICLE PAGE ---------------------------------------
-        ArticlePage articlePage = new ArticlePage(baseFunc);
-        articlePage.waitForElements();
+        String articlePageTitle = article.getTitle();
+        int articlePageCommentsCount = article.getCommentsCount();
 
-        String articlePageTitle = articlePage.getArticleTitle();
-        int articlePageCommentsCount = articlePage.getCommentsCount();
+        Assertions.assertEquals(homePageTitle, articlePageTitle, "Wrong title!");
+        Assertions.assertEquals(homePageCommentsCount, articlePageCommentsCount, "Wrong count!");
 
-        baseFunc.assertionTestCompare(homePageTitle, articlePageTitle, homePageCommentsCount, articlePageCommentsCount);
+        CommentsPage comments = article.openCommentsPage();
 
-        articlePage.clickComments();
         //-------------------------------- COMMENTS PAGE --------------------------------------
-        CommentsPage commentsPage = new CommentsPage(baseFunc);
-        commentsPage.waitForElements();
+        String commentsPageTitle = comments.getTitle();
+        int commentsPageCommentsCount = comments.getCommentsCount();
 
-        List<WebElement> commentsCount = commentsPage.getComments();
-
-        String commentsPageTitle = commentsPage.getCommentsPageTitle();
-        int commentsSum = commentsPage.addCommentsCount(commentsCount.get(0), commentsCount.get(1));
-
-        baseFunc.assertionTestCompare(articlePageTitle, commentsPageTitle, articlePageCommentsCount, commentsSum);
-
-        LOGGER.info("Test finished successfully!");
+        Assertions.assertEquals(articlePageTitle, commentsPageTitle, "Wrong title!");
+        Assertions.assertEquals(articlePageCommentsCount, commentsPageCommentsCount, "Wrong count!");
     }
     @AfterEach
-    public void closeBrowser() {
-        driver.close();
+    public void endTest() {
+        base.endTest();
     }
 }
