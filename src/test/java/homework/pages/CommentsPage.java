@@ -7,8 +7,9 @@ import org.openqa.selenium.WebElement;
 
 public class CommentsPage {
     private final By TITLE = By.xpath(".//h1 [@class='article-headline' and @itemprop='headline name']");
-    private final By COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'article-comments-heading__count')]");
+    private final By COMMENTS = By.xpath(".//span [contains (@class, 'article-comments-heading__count')]");
     private final By EXCLAMATION = By.className(".//span [@class='article-headline--exclamation']");
+    private final By ARTICLE_ADDITION =  By.className("article-headline--additional");
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     BaseFunctions base;
@@ -17,24 +18,23 @@ public class CommentsPage {
         this.base = base;
     }
 
-    public String getCleanTitle(){
-        String title;
-        WebElement element = base.getElement(TITLE);
+    public String getTitle() {
+        LOGGER.info("Getting article title");
+        WebElement element = base.driver.findElement(TITLE);
+        String title =  element.getText();
 
-        if (base.isEmpty(element, EXCLAMATION)){
-            title = element.getText();
-        }else {
-            int exclamationLength = element.findElement(EXCLAMATION).getText().length();
-            title = element.getText().substring(exclamationLength + 1);
-        }
-        if (!base.isEmpty(element, COMMENTS_COUNT)) {
-            int commentsLength = element.findElement(COMMENTS_COUNT).getText().length();
-            title = title.substring(0, title.length() - commentsLength -1);
-        }
+        title = base.removeChildText(title, element, EXCLAMATION);
+        title = base.removeChildText(title, element, ARTICLE_ADDITION);
+
         return title;
     }
 
-    public String getCommentsCount(){
-        return base.getCommentsCount(COMMENTS_COUNT);
+    public int getCommentsCount () {
+        LOGGER.info("Getting article comments count");
+
+        if(!base.findElements(COMMENTS).isEmpty()){
+            return Integer.parseInt(base.getText(COMMENTS));
+        }
+        return 0;
     }
 }

@@ -7,6 +7,7 @@ import homework.pages.HomePage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 
@@ -15,26 +16,29 @@ import java.util.List;
 public class TestHomework {
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     private final String URL = "http://tvnet.lv";
-    BaseFunctions base = new BaseFunctions();
-    HomePage home = new HomePage(base);
-    ArticlePage articlePage = new ArticlePage(base);
-    CommentsPage comments = new CommentsPage(base);
+    private final int ARTICLE_ID = 1;
+
+    BaseFunctions base;
 
     @Test
     public void homeworkTaskOne() {
+        base = new BaseFunctions();
         base.openPage(URL);
-        home.clickCookiesButton();
+        HomePage home = new HomePage(base);
+        home.acceptCookies();
 
-        home.clickArticle();
-        articlePage.clickComments();
+        ArticlePage article = home.getFirstArticle();
+        article.openCommentsPage();
     }
 
     @Test
     public void homeworkTaskTwo() {
+        base = new BaseFunctions();
         base.openPage(URL);
-        home.clickCookiesButton();
+        HomePage home = new HomePage(base);
+        home.acceptCookies();
 
-        System.out.println("Main article title is: " + home.getArticleName());
+        System.out.println("Main article title is: " + home.getFirstTitle());
     }
 
     @Test
@@ -49,23 +53,26 @@ public class TestHomework {
 
     @Test
     public void homeworkTaskFour() {
+        base = new BaseFunctions();
         base.openPage(URL);
-        home.clickCookiesButton();
+        HomePage home = new HomePage(base);
+        home.acceptCookies();
 
-        List<WebElement> articleList = home.getArticles();
+        List<WebElement> articleList = home.getTitles();
         for (WebElement article:articleList) {
-            System.out.println(home.getCleanTitle(article));
+            System.out.println(home.getTitleText(article));
         }
     }
 
     @Test
     public void homeworkTaskFive()  {
         base.openPage(URL);
-        home.clickCookiesButton();
+        HomePage home = new HomePage(base);
+        home.acceptCookies();
 
-        List<WebElement> articleList = home.getArticles();
+        List<WebElement> articleList = home.getTitles();
         for (WebElement article:articleList) {
-            String articleText = home.getCleanTitle(article);
+            String articleText = home.getTitleText(article);
             String commentsText = home.getCommentsCount(article);
             int commentsCount = 0;
 
@@ -79,31 +86,35 @@ public class TestHomework {
 
     @Test
     public void homeworkTaskSix(){
+        LOGGER.info("This test is checking titles and comments count on home/article/comments pages");
+
+        base = new BaseFunctions();
         base.openPage(URL);
-        home.clickCookiesButton();
 
         //Home Page
-        List<WebElement> articleList = home.getArticles();
-        WebElement article = articleList.get(2);
+        HomePage home = new HomePage(base);
+        home.acceptCookies();
 
-        String homeArticleName = home.getCleanTitle(article);
-        int homeCommentsCount = base.removeBrackets(home.getCommentsCount(article));
+        String homePageTitle = home.getTitleText(ARTICLE_ID);
+        int homePageCommentsCount = home.getCommentsCount(ARTICLE_ID);
 
-        article.click();
+        ArticlePage article = home.openArticle(ARTICLE_ID);
+
         //Article Page
+        String articlePageTitle = article.getTitle();
+        int articlePageCommentsCount = article.getCommentsCount();
 
-        String articleArticleName = articlePage.getCleanTitle();
-        int articleCommentsCount = base.asInt(articlePage.getCommentsCount());
+        Assertions.assertEquals(homePageTitle, articlePageTitle, "Wrong title!");
+        Assertions.assertEquals(homePageCommentsCount, articlePageCommentsCount, "Wrong count!");
 
-        base.titleCommentTest(homeArticleName, articleArticleName, homeCommentsCount, articleCommentsCount);
+        CommentsPage comments = article.openCommentsPage();
 
-        articlePage.clickComments();
         //Comments Page
+        String commentsPageTitle = comments.getTitle();
+        int commentsPageCommentsCount = comments.getCommentsCount();
 
-        String commentsArticleName = comments.getCleanTitle();
-        int commentsCommentCount = base.asInt(comments.getCommentsCount());
-
-        base.titleCommentTest(articleArticleName, commentsArticleName, articleCommentsCount, commentsCommentCount);
+        Assertions.assertEquals(articlePageTitle, commentsPageTitle, "Wrong title!");
+        Assertions.assertEquals(articlePageCommentsCount, commentsPageCommentsCount, "Wrong count!");
     }
 
     @AfterEach

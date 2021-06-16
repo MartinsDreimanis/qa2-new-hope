@@ -22,6 +22,8 @@ public class BaseFunctions {
         System.setProperty("webdriver.chrome.driver", "c://chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+
+        wait = new WebDriverWait(driver, 10);
     }
 
     public void openPage(String url) {

@@ -3,12 +3,13 @@ package homework.pages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class ArticlePage {
     private final By TITLE = By.xpath(".//h1 [@class='article-headline' and @itemprop='headline name']");
+    private final By COMMENTS = By.xpath(".//a [contains (@class, 'article-share__item--comments')]");
     private final By EXCLAMATION = By.className(".//span [@class='article-headline--exclamation']");
-    private final By COMMENTS_ICON = By.xpath(".//a[6]/span[@class= 'article-share__image-container social-button']");
-    private final By COMMENTS_COUNT = By.xpath(".//span [contains (@class, 'article-share__item--comments')]");
+    private final By ARTICLE_ADDITION =  By.className("article-headline--additional");
 
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
     private BaseFunctions base;
@@ -17,15 +18,29 @@ public class ArticlePage {
         this.base=base;
     }
 
-    public String getCleanTitle(){
-        return base.cleanTitle(TITLE, EXCLAMATION);
+    public String getTitle() {
+        LOGGER.info("Getting article title");
+        WebElement element = base.driver.findElement(TITLE);
+        String title =  element.getText();
+
+        title = base.removeChildText(title, element, EXCLAMATION);
+        title = base.removeChildText(title, element, ARTICLE_ADDITION);
+
+        return title;
     }
 
-    public String getCommentsCount(){
-        return base.getCommentsCount(COMMENTS_COUNT);
+    public int getCommentsCount() {
+        LOGGER.info("Getting article comments count");
+
+        if(!base.findElements(COMMENTS).isEmpty()){
+            return Integer.parseInt(base.getText(COMMENTS));
+        }
+        return 0;
     }
 
-    public void clickComments(){
-        base.click(COMMENTS_ICON);
+    public CommentsPage openCommentsPage(){
+        LOGGER.info("Opening article comments page");
+        base.click(COMMENTS);
+        return new CommentsPage(base);
     }
 }
