@@ -2,7 +2,7 @@ package model;
 
 public class Wind {
     private double speed;
-    private int angle;
+    private int deg;
 
     public double getSpeed() {
         return speed;
@@ -12,11 +12,11 @@ public class Wind {
         this.speed = speed;
     }
 
-    public int getAngle() {
-        return angle;
+    public int getDeg() {
+        return deg;
     }
 
-    public void setAngle(int angle) {
-        this.angle = angle;
+    public void setDeg(int deg) {
+        this.deg = deg;
     }
 }

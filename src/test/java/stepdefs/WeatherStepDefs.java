@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.sl.In;
 import model.Weather;
 import model.WeatherResponse;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +65,7 @@ public class WeatherStepDefs {
     @And("wind readings are:")
     public void check_wind(Map<String, String> wind){
         Assertions.assertEquals(Double.parseDouble(wind.get("speed")), response.getWind().getSpeed(), "Incorrect Speed");
-        Assertions.assertEquals(Integer.parseInt(wind.get("deg")), response.getWind().getAngle(), "Incorrect Angle");
+        Assertions.assertEquals(Integer.parseInt(wind.get("deg")), response.getWind().getDeg(), "Incorrect deg");
     }
 
     @And("cloud coverage is:")
@@ -101,6 +100,6 @@ public class WeatherStepDefs {
 
     @And("cod is {int}")
     public void check_cod(int cod){
-        Assertions.assertEquals(cod, response.getDt(), "Incorrect \"cod\"");
+        Assertions.assertEquals(cod, response.getCod(), "Incorrect \"cod\"");
     }
 }
