@@ -1,18 +1,18 @@
-package packageobject;
+package packageobject.delfi;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import packageobject.pages.ArticlePage;
-import packageobject.pages.BaseFunctions;
-import packageobject.pages.CommentsPage;
-import packageobject.pages.HomePage;
+import packageobject.delfi.pages.ArticlePage;
+import packageobject.BaseFunctions;
+import packageobject.delfi.pages.CommentsPage;
+import packageobject.delfi.pages.HomePage;
 
 public class DelfiArticleCommentsTest {
     private final Logger LOGGER = LogManager.getLogger(this.getClass());
-    private final int ARTICLE_ID = 1;
+    private final int ARTICLE_ID = 5;
     BaseFunctions base;
 
     @Test

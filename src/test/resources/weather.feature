@@ -9,15 +9,9 @@ Feature: Testing weather endpoint
       | lon | 145.77 |
       | lat | -16.92 |
 
-    And weather description is:
-      | id          | 802                                                                                                                                                                   |
-      | main        | Clouds                                                                                                                                                                |
-      | description | scattered clouds                                                                                                                                                      |
-      | icon        | 03n                                                                                                                                                                   |
-
-#    And weather description is:
-#      | Weather     | [  {  "id": 802,  "main": "Clouds",  "description": "scattered clouds",  "icon": "03n"  },  {  "id": 806,  "main": "Sunny",  "description": "clear",  "icon": "05n"}] |
-
+    And weather descriptions are:
+      | id          | main             | description      | icon |
+      | 802         | Clouds           | scattered clouds | 03n  |
 
     And base is "stations"
 

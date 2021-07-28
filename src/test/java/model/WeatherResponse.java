@@ -8,7 +8,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherResponse {
     private Coord coord;
-
     @JsonProperty("weather")
     private List<Weather> weathers;
     private String base;
